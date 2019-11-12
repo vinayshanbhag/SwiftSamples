@@ -55,4 +55,3 @@ let sortedFilteredObservations = filteredObservations.sorted(by:{$0.dateObserved
 for i in sortedFilteredObservations {
     print("Kind:\(i.kind), Value:\(i.value)\(i.unit), Date:\(i.dateObserved)")
 }
-
