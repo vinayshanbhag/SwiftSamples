@@ -22,22 +22,25 @@ extension String {
 // Sample JSON - list of observations
 var jsonString = """
    [
-    { "kind":"heart rate", "value":70, "unit":"bpm", "dateObserved":"2019-11-11T10:00:00Z" },
-    { "kind":"heart rate", "value":72, "unit":"bpm", "dateObserved":"2019-11-09T13:00:00Z" },
-    { "kind":"heart rate", "value":75, "unit":"bpm", "dateObserved":"2019-11-10T14:00:00Z" },
-    { "kind":"temperature","value":98, "unit":"F",   "dateObserved":"2019-11-11T10:00:00Z" },
-    { "kind":"temperature","value":100,"unit":"F",   "dateObserved":"2019-11-09T16:00:00Z" },
-    { "kind":"temperature","value":99, "unit":"F",   "dateObserved":"2019-11-10T15:00:00Z" },
-    { "kind":"spO2",       "value":98, "unit":"%",   "dateObserved":"2019-11-11T11:00:00Z" },
-    { "kind":"spO2",       "value":95, "unit":"%",   "dateObserved":"2019-11-09T09:00:00Z" },
-    { "kind":"spO2",       "value":99, "unit":"%",   "dateObserved":"2019-11-10T17:00:00Z" }
+    { "kind":"heart rate", "value":70, "unit":"bpm",  "dateObserved":"2019-11-11T10:00:00Z" },
+    { "kind":"temperature","value":100,"unit":"F",    "dateObserved":"2019-11-09T16:00:00Z" },
+    { "kind":"heart rate", "value":72, "unit":"bpm",  "dateObserved":"2019-11-09T13:00:00Z" },
+    { "kind":"temperature","value":98, "unit":"F",    "dateObserved":"2019-11-11T10:00:00Z" },
+    { "kind":"spO2",       "value":98, "unit":"%",    "dateObserved":"2019-11-11T11:00:00Z" },
+    { "kind":"temperature","value":99, "unit":"F",    "dateObserved":"2019-11-10T15:00:00Z" },
+    { "kind":"spO2",       "value":95, "unit":"%",    "dateObserved":"2019-11-09T09:00:00Z" },
+    { "kind":"heart rate", "value":75, "unit":"bpm",  "dateObserved":"2019-11-10T14:00:00Z" },
+    { "kind":"spO2",       "value":99, "unit":"%",    "dateObserved":"2019-11-10T17:00:00Z" },
+    { "kind":"weight",     "value":150,"unit":"lbs",  "dateObserved":"2019-11-10T17:10:00Z" },
+    { "kind":"height",     "value":1.8,"unit":"m",    "dateObserved":"2019-11-10T17:20:00Z" },
+    { "kind":"BMI",        "value":22, "unit":"kg/m2","dateObserved":"2019-11-10T17:30:00Z" }
    ]
 """
 
 // Observation type
 struct Observation: Codable {
     var kind:String
-    var value:Int
+    var value:Float
     var unit:String
     var dateObserved:Date
 }
@@ -55,3 +58,4 @@ let sortedFilteredObservations = filteredObservations.sorted(by:{$0.dateObserved
 for i in sortedFilteredObservations {
     print("Kind:\(i.kind), Value:\(i.value)\(i.unit), Date:\(i.dateObserved)")
 }
+
