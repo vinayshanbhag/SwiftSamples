@@ -1,0 +1,110 @@
+         [{
+           "id": "312",
+           "code": "8480-6",
+           "display": "Body temperature",
+           "category" :"vital-signs",
+           "issued": "2019-01-26T19:54:07Z",
+           "valueQuantity": {
+             "value": 39,
+             "_value": {
+               "fhir_comments": [
+                 "   Temperature=39 degrees Celsius   "
+               ]
+             },
+             "unit": "degrees C",
+             "system": "http://snomed.info/sct",
+             "code": "258710007"
+           },
+           "method": {
+             "coding": [
+               {
+                 "system": "http://snomed.info/sct",
+                 "code": "89003005",
+                 "display": "Oral temperature taking"
+               }
+             ]
+           }
+         },
+         {
+           "id": "313",
+           "code": "8480-6",
+           "display": "Body temperature",
+           "category" :"vital-signs",
+           "issued": "2019-01-26T18:25:07Z",
+           "valueQuantity": {
+             "value": 38,
+             "_value": {
+               "fhir_comments": [
+                 "   Temperature=38 degrees Celsius   "
+               ]
+             },
+             "unit": "degrees C",
+             "system": "http://snomed.info/sct",
+             "code": "258710007"
+           },
+           "method": {
+             "coding": [
+               {
+                 "system": "http://snomed.info/sct",
+                 "code": "89003005",
+                 "display": "Oral temperature taking"
+               }
+             ]
+           }
+         },
+        {
+          "id": "314",
+          "code": "8480-6",
+          "display": "Body temperature",
+          "category" :"vital-signs",
+          "issued": "2019-01-25T16:15:07Z",
+          "valueQuantity": {
+            "value": 37,
+            "_value": {
+              "fhir_comments": [
+                "   Temperature=37 degrees Celsius   "
+              ]
+            },
+            "unit": "degrees C",
+            "system": "http://snomed.info/sct",
+            "code": "258710007"
+          },
+          "method": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "89003005",
+                "display": "Oral temperature taking"
+              }
+            ]
+          }
+        },
+        {
+          "id": "315",
+          "code": "8867-4",
+          "display": "Heart rate",
+          "category" :"vital-signs",
+          "issued": "2019-01-29T09:35:17Z",
+          "valueQuantity": {
+            "value": 72,
+            "_value": {
+              "fhir_comments": [
+                "   Heart rate=72 bpm   "
+              ]
+            },
+            "unit": "bpm",
+            "system": "http://snomed.info/sct",
+            "code": "somecodehere"
+          },
+          "method": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "somecodehere",
+                "display": "wrist"
+              }
+            ]
+          }
+        },
+
+        ]
