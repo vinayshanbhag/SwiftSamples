@@ -21,44 +21,159 @@ extension String {
 
 // Sample JSON - list of observations
 var jsonString = """
-   [
-    { "kind":"heart rate", "quantity":{"value":70, "unit":"bpm"}, "dateObserved":"2019-11-11T10:00:00Z" },
-    { "kind":"heart rate", "quantity":{"value":72, "unit":"bpm"}, "dateObserved":"2019-11-09T13:00:00Z" },
-    { "kind":"heart rate", "quantity":{"value":75, "unit":"bpm"}, "dateObserved":"2019-11-10T14:00:00Z" },
-    { "kind":"temperature","quantity":{"value":98, "unit":"F"},   "dateObserved":"2019-11-11T10:00:00Z" },
-    { "kind":"temperature","quantity":{"value":100,"unit":"F"},   "dateObserved":"2019-11-09T16:00:00Z" },
-    { "kind":"temperature","quantity":{"value":99, "unit":"F"},   "dateObserved":"2019-11-10T15:00:00Z" },
-    { "kind":"spO2",       "quantity":{"value":98, "unit":"%"},   "dateObserved":"2019-11-11T11:00:00Z" },
-    { "kind":"spO2",       "quantity":{"value":95, "unit":"%"},   "dateObserved":"2019-11-09T09:00:00Z" },
-    { "kind":"spO2",       "quantity":{"value":99, "unit":"%"},   "dateObserved":"2019-11-10T17:00:00Z" }
-   ]
+         [{
+           "id": "312",
+           "code": "8480-6",
+           "display": "Body temperature",
+           "category" :"vital-signs",
+           "issued": "2019-01-26T19:54:07Z",
+           "valueQuantity": {
+             "value": 39,
+             "_value": {
+               "fhir_comments": [
+                 "   Temperature=39 degrees Celsius   "
+               ]
+             },
+             "unit": "degrees C",
+             "system": "http://snomed.info/sct",
+             "code": "258710007"
+           },
+           "method": {
+             "coding": [
+               {
+                 "system": "http://snomed.info/sct",
+                 "code": "89003005",
+                 "display": "Oral temperature taking"
+               }
+             ]
+           }
+         },
+         {
+           "id": "313",
+           "code": "8480-6",
+           "display": "Body temperature",
+           "category" :"vital-signs",
+           "issued": "2019-01-26T18:25:07Z",
+           "valueQuantity": {
+             "value": 38,
+             "_value": {
+               "fhir_comments": [
+                 "   Temperature=38 degrees Celsius   "
+               ]
+             },
+             "unit": "degrees C",
+             "system": "http://snomed.info/sct",
+             "code": "258710007"
+           },
+           "method": {
+             "coding": [
+               {
+                 "system": "http://snomed.info/sct",
+                 "code": "89003005",
+                 "display": "Oral temperature taking"
+               }
+             ]
+           }
+         },
+        {
+          "id": "314",
+          "code": "8480-6",
+          "display": "Body temperature",
+          "category" :"vital-signs",
+          "issued": "2019-01-25T16:15:07Z",
+          "valueQuantity": {
+            "value": 37,
+            "_value": {
+              "fhir_comments": [
+                "   Temperature=37 degrees Celsius   "
+              ]
+            },
+            "unit": "degrees C",
+            "system": "http://snomed.info/sct",
+            "code": "258710007"
+          },
+          "method": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "89003005",
+                "display": "Oral temperature taking"
+              }
+            ]
+          }
+        },
+        {
+          "id": "315",
+          "code": "8867-4",
+          "display": "Heart rate",
+          "category" :"vital-signs",
+          "issued": "2019-01-29T09:35:17Z",
+          "valueQuantity": {
+            "value": 72,
+            "_value": {
+              "fhir_comments": [
+                "   Heart rate=72 bpm   "
+              ]
+            },
+            "unit": "bpm",
+            "system": "http://snomed.info/sct",
+            "code": "somecodehere"
+          },
+          "method": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "somecodehere",
+                "display": "wrist"
+              }
+            ]
+          }
+        },
+
+        ]
 """
 
-// Observation type
-struct Observation: Codable {
-    var kind:String
-    var quantity:Quantity
-    var dateObserved:Date
+struct Observation : Codable {
+    struct Quantity : Codable {
+        let value: Float
+        let unit: String
+        let system:URL
+        let code:String
+    }
+
+    struct Method : Codable {
+        struct Coding : Codable {
+            let display:String
+            let system:URL
+            let code: String
+        }
+        let coding: [Coding]
+    }
+    
+    let valueQuantity:Quantity
+    let method: Method
+    let code: String
+    let display: String
+    let id:String
+    let category:String
+    let issued:Date
 }
 
-struct Quantity: Codable {
-    var value:Float
-    var unit:String
+// Parse JSON string into list of observation objects
+let observations = jsonString.parse(to:[Observation].self)!
+
+
+// Filter observations by code
+print("--filtered--")
+let filteredObservations = observations.filter({$0.code=="8480-6"})
+for obs in filteredObservations{
+    print("\(obs.display) - \(obs.valueQuantity.value)\(obs.valueQuantity.unit) \(obs.method.coding[0].display) - \(obs.issued)")
 }
 
-// Parse JSON into a list of Observations
-let observations = jsonString.parse(to: [Observation].self)
-
-// filter observations to required kind
-let filteredObservations = observations!.filter({$0.kind=="heart rate"})
-
-// sort filtered observations by date descending
-let sortedFilteredObservations = filteredObservations.sorted(by:{$0.dateObserved.compare($1.dateObserved) == .orderedDescending})
-
-// print
-for i in sortedFilteredObservations {
-    print("Kind:\(i.kind), Value:\(i.quantity.value)\(i.quantity.unit), Date:\(i.dateObserved)")
+// Sort observations by date
+print("--sorted--")
+let sortedFilteredObservations = filteredObservations.sorted(by:{$0.issued.compare($1.issued) == .orderedDescending})
+for obs in sortedFilteredObservations{
+    print("\(obs.display) - \(obs.valueQuantity.value)\(obs.valueQuantity.unit) \(obs.method.coding[0].display) - \(obs.issued)")
 }
-
-
 
