@@ -19,119 +19,25 @@ extension String {
     }
 }
 
-// Sample JSON - list of observations
-var jsonString = """
-         [{
-           "id": "312",
-           "code": "8480-6",
-           "display": "Body temperature",
-           "category" :"vital-signs",
-           "issued": "2019-01-26T19:54:07Z",
-           "valueQuantity": {
-             "value": 39,
-             "_value": {
-               "fhir_comments": [
-                 "   Temperature=39 degrees Celsius   "
-               ]
-             },
-             "unit": "degrees C",
-             "system": "http://snomed.info/sct",
-             "code": "258710007"
-           },
-           "method": {
-             "coding": [
-               {
-                 "system": "http://snomed.info/sct",
-                 "code": "89003005",
-                 "display": "Oral temperature taking"
-               }
-             ]
-           }
-         },
-         {
-           "id": "313",
-           "code": "8480-6",
-           "display": "Body temperature",
-           "category" :"vital-signs",
-           "issued": "2019-01-26T18:25:07Z",
-           "valueQuantity": {
-             "value": 38,
-             "_value": {
-               "fhir_comments": [
-                 "   Temperature=38 degrees Celsius   "
-               ]
-             },
-             "unit": "degrees C",
-             "system": "http://snomed.info/sct",
-             "code": "258710007"
-           },
-           "method": {
-             "coding": [
-               {
-                 "system": "http://snomed.info/sct",
-                 "code": "89003005",
-                 "display": "Oral temperature taking"
-               }
-             ]
-           }
-         },
-        {
-          "id": "314",
-          "code": "8480-6",
-          "display": "Body temperature",
-          "category" :"vital-signs",
-          "issued": "2019-01-25T16:15:07Z",
-          "valueQuantity": {
-            "value": 37,
-            "_value": {
-              "fhir_comments": [
-                "   Temperature=37 degrees Celsius   "
-              ]
-            },
-            "unit": "degrees C",
-            "system": "http://snomed.info/sct",
-            "code": "258710007"
-          },
-          "method": {
-            "coding": [
-              {
-                "system": "http://snomed.info/sct",
-                "code": "89003005",
-                "display": "Oral temperature taking"
-              }
-            ]
-          }
-        },
-        {
-          "id": "315",
-          "code": "8867-4",
-          "display": "Heart rate",
-          "category" :"vital-signs",
-          "issued": "2019-01-29T09:35:17Z",
-          "valueQuantity": {
-            "value": 72,
-            "_value": {
-              "fhir_comments": [
-                "   Heart rate=72 bpm   "
-              ]
-            },
-            "unit": "bpm",
-            "system": "http://snomed.info/sct",
-            "code": "somecodehere"
-          },
-          "method": {
-            "coding": [
-              {
-                "system": "http://snomed.info/sct",
-                "code": "somecodehere",
-                "display": "wrist"
-              }
-            ]
-          }
-        },
+func query(address: String) -> String {
+    let url = URL(string: address)
+    let semaphore = DispatchSemaphore(value: 0)
+    
+    var result: String = ""
+    
+    let task = URLSession.shared.dataTask(with: url!) {(data, response, error) in
+        result = String(data: data!, encoding: String.Encoding.utf8)!
+        semaphore.signal()
+    }
+    
+    task.resume()
+    semaphore.wait()
+    return result
+}
 
-        ]
-"""
+// Sample JSON - list of observations
+let jsonString = query(address: "https://raw.githubusercontent.com/vinayshanbhag/SwiftSamples/master/observations.json")
+
 
 struct Observation : Codable {
     struct Quantity : Codable {
@@ -159,21 +65,24 @@ struct Observation : Codable {
     let issued:Date
 }
 
-// Parse JSON string into list of observation objects
+// parse observations 
 let observations = jsonString.parse(to:[Observation].self)!
 
-
-// Filter observations by code
+// filter observations by code
 print("--filtered--")
 let filteredObservations = observations.filter({$0.code=="8480-6"})
 for obs in filteredObservations{
     print("\(obs.display) - \(obs.valueQuantity.value)\(obs.valueQuantity.unit) \(obs.method.coding[0].display) - \(obs.issued)")
 }
 
-// Sort observations by date
+// Sort observations by issued date
 print("--sorted--")
 let sortedFilteredObservations = filteredObservations.sorted(by:{$0.issued.compare($1.issued) == .orderedDescending})
 for obs in sortedFilteredObservations{
     print("\(obs.display) - \(obs.valueQuantity.value)\(obs.valueQuantity.unit) \(obs.method.coding[0].display) - \(obs.issued)")
 }
 
+// Latest observation
+print("--latest--")
+var obs = filteredObservations.sorted(by:{$0.issued.compare($1.issued) == .orderedDescending})[0]
+print("\(obs.display) - \(obs.valueQuantity.value)\(obs.valueQuantity.unit) \(obs.method.coding[0].display) - \(obs.issued)")
