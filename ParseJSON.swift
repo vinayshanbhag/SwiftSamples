@@ -33,7 +33,25 @@ extension URL {
       return result
   }
 }
-struct Observations: Codable {
+
+struct Patient:Codable {
+  let name:String
+  let hospital:String
+  let unit:String
+  let roomNumber:String
+  let gender:String
+  let fin:String
+  let dob:String
+  let age:Int
+  let admitDate:Date
+  let dischargeOrder:Date
+  let anticipatedDischargeDate:Date
+  let admissionStatus:String
+  let allergies:Bool?
+  let details:Details
+}
+
+struct Details: Codable {
     let observations:[Observation]
 }
 struct Observation : Codable {
@@ -74,12 +92,13 @@ func printObs(_ obs:Observation) {
 // Sample url- json response with list of observations
 let url = "https://raw.githubusercontent.com/vinayshanbhag/SwiftSamples/master/observations.json"
 let jsonString = URL(string:url)!.get()
+
 // parse observations
-let observations = jsonString.parse(to:Observations.self)!
+let patient = jsonString.parse(to:Patient.self)!
 
 // filter observations by code
 print("--filtered--")
-let filteredObservations = observations.observations.filter({$0.code=="8480-6"})
+let filteredObservations = patient.details.observations.filter({$0.code=="8480-6"})
 printObs(filteredObservations)
 
 
