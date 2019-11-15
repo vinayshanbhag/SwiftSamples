@@ -77,7 +77,7 @@ struct Observation : Codable {
         }
         let coding: [Coding]
     }
-    let method: Method?
+    let method: Method
 }
 
 // Utility functions to pretty print observations
