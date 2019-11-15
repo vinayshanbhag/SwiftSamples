@@ -36,17 +36,17 @@ extension URL {
 
 struct Patient:Codable {
   let name:String
-  let hospital:String
-  let unit:String
-  let roomNumber:String
+  let hospital:String?
+  let unit:String?
+  let roomNumber:String?
   let gender:String
   let fin:String
   let dob:String
   let age:Int
-  let admitDate:Date
-  let dischargeOrder:Date
-  let anticipatedDischargeDate:Date
-  let admissionStatus:String
+  let admitDate:Date?
+  let dischargeOrder:Date?
+  let anticipatedDischargeDate:Date?
+  let admissionStatus:String?
   let allergies:Bool?
   let details:Details
 }
@@ -77,7 +77,7 @@ struct Observation : Codable {
         }
         let coding: [Coding]
     }
-    let method: Method
+    let method: Method?
 }
 
 // Utility functions to pretty print observations
