@@ -22,26 +22,35 @@ extension String {
 // extend URL to add http get request
 extension URL {
   func get() -> String {
-      let semaphore = DispatchSemaphore(value: 0) 
+      let semaphore = DispatchSemaphore(value: 0)
       var result: String = ""
       let task = URLSession.shared.dataTask(with: self) {(data, response, error) in
           result = String(data: data!, encoding: String.Encoding.utf8)!
           semaphore.signal()
-      } 
+      }
       task.resume()
       semaphore.wait()
       return result
   }
 }
-
+struct Observations: Codable {
+    let observations:[Observation]
+}
 struct Observation : Codable {
+    let id:String
+    let code: String
+    let display: String
+    let category:String
+    let issued:Date
+    
     struct Quantity : Codable {
         let value: Float
         let unit: String
         let system:URL
         let code:String
     }
-
+    let valueQuantity:Quantity
+    
     struct Method : Codable {
         struct Coding : Codable {
             let display:String
@@ -50,14 +59,7 @@ struct Observation : Codable {
         }
         let coding: [Coding]
     }
-    
-    let valueQuantity:Quantity
     let method: Method
-    let code: String
-    let display: String
-    let id:String
-    let category:String
-    let issued:Date
 }
 
 // Utility functions to pretty print observations
@@ -72,12 +74,12 @@ func printObs(_ obs:Observation) {
 // Sample url- json response with list of observations
 let url = "https://raw.githubusercontent.com/vinayshanbhag/SwiftSamples/master/observations.json"
 let jsonString = URL(string:url)!.get()
-// parse observations 
-let observations = jsonString.parse(to:[Observation].self)!
+// parse observations
+let observations = jsonString.parse(to:Observations.self)!
 
 // filter observations by code
 print("--filtered--")
-let filteredObservations = observations.filter({$0.code=="8480-6"})
+let filteredObservations = observations.observations.filter({$0.code=="8480-6"})
 printObs(filteredObservations)
 
 
